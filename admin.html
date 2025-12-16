@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin BK SMAN 11 Luwu</title>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- jsPDF AutoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0a4fa3, #f5c542);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+h2 {
+    text-align: center;
+    color: #0a4fa3;
+    margin-bottom: 25px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.pdf {
+    background: linear-gradient(135deg, #198754, #2ecc71);
+}
+
+.reset {
+    background: linear-gradient(135deg, #d9534f, #f39c12);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #0a4fa3;
+    color: #f5c542;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #fff3cd;
+}
+</style>
+</head>
+
+<body onload="tampilkanData()">
+
+<div class="container">
+<h2>DATA KONSULTASI SISWA<br>BK SMAN 11 LUWU</h2>
+
+<div class="btn-group">
+    <button class="pdf" onclick="exportPDF()">Export PDF</button>
+    <button class="reset" onclick="resetData()">Reset Data</button>
+</div>
+
+<table>
+<thead>
+<tr>
+    <th>No</th>
+    <th>Nama</th>
+    <th>Kelas</th>
+    <th>Tanggal</th>
+    <th>Jam</th>
+    <th>Masalah</th>
+</tr>
+</thead>
+<tbody id="isiTabel"></tbody>
+</table>
+</div>
+
+<script>
+function tampilkanData() {
+    let dataBK = JSON.parse(localStorage.getItem("dataBK")) || [];
+    let tabel = document.getElementById("isiTabel");
+    tabel.innerHTML = "";
+
+    dataBK.forEach((d, i) => {
+        let row = tabel.insertRow();
+        row.insertCell(0).innerText = i + 1;
+        row.insertCell(1).innerText = d.nama;
+        row.insertCell(2).innerText = d.kelas;
+        row.insertCell(3).innerText = d.tanggal;
+        row.insertCell(4).innerText = d.jam;
+        row.insertCell(5).innerText = d.masalah;
+    });
+}
+
+function exportPDF() {
+    let dataBK = JSON.parse(localStorage.getItem("dataBK")) || [];
+    if (dataBK.length === 0) {
+        alert("Tidak ada data!");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("l");
+
+    doc.text("DATA KONSULTASI BK - SMAN 11 LUWU", 14, 15);
+
+    let body = dataBK.map((d, i) => [
+        i + 1,
+        d.nama,
+        d.kelas,
+        d.tanggal,
+        d.jam,
+        d.masalah
+    ]);
+
+    doc.autoTable({
+        head: [["No", "Nama", "Kelas", "Tanggal", "Jam", "Masalah"]],
+        body: body,
+        startY: 25,
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [10, 79, 163] }
+    });
+
+    doc.save("Data_Konsultasi_BK_Admin.pdf");
+}
+
+function resetData() {
+    if (confirm("Yakin ingin menghapus semua data siswa?")) {
+        localStorage.removeItem("dataBK");
+        tampilkanData();
+        alert("Data berhasil dihapus!");
+    }
+}
+</script>
+
+</body>
+</html>

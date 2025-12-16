@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>BK SMAN 11 LUWU - Siswa</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0a4fa3, #f4c430);
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* ===== HEADER ===== */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header img {
+    width: 120px; /* LOGO DIPERBESAR */
+    margin-bottom: 10px;
+}
+
+.header h2 {
+    margin: 5px 0;
+    color: #0a4fa3;
+}
+
+.header h3 {
+    margin: 0;
+    color: #f4c430;
+    font-weight: bold;
+}
+
+/* ===== FORM ===== */
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+    color: #333;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #0a4fa3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #083b7a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <img src="11.png" alt="Logo SMAN 11 LUWU">
+        <h2>Bimbingan Konseling</h2>
+        <h3>SMAN 11 LUWU</h3>
+    </div>
+
+    <!-- FORM -->
+    <form onsubmit="kirimData(event)">
+        <label>Nama</label>
+        <input type="text" id="nama" required>
+
+        <label>Kelas</label>
+        <input type="text" id="kelas" required>
+
+        <label>Masalah Anda</label>
+        <textarea id="masalah" required></textarea>
+
+        <button type="submit">Kirim Konsultasi</button>
+    </form>
+
+</div>
+
+<script>
+function kirimData(e) {
+    e.preventDefault();
+
+    let dataBK = JSON.parse(localStorage.getItem("dataBK")) || [];
+
+    let now = new Date();
+
+    dataBK.push({
+        nama: nama.value,
+        kelas: kelas.value,
+        tanggal: now.toLocaleDateString("id-ID"),
+        jam: now.toLocaleTimeString("id-ID"),
+        masalah: masalah.value
+    });
+
+    localStorage.setItem("dataBK", JSON.stringify(dataBK));
+
+    alert("Data berhasil dikirim ke Admin BK");
+    e.target.reset();
+}
+</script>
+
+</body>
+</html>
